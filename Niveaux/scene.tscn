@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://ctfpkhv8qpwtx"]
+
+[ext_resource type="Script" path="res://Scripts/Player.cs" id="1_5iw0s"]
+[ext_resource type="Texture2D" uid="uid://c5l1djnqgc0j3" path="res://Aperture science/icon.svg" id="2_b04xy"]
+[ext_resource type="Texture2D" uid="uid://b3cqtudg2qys" path="res://Aperture science/photo de moi.jpg" id="2_hjkx2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yofdp"]
+radius = 53.0094
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gv683"]
+size = Vector2(123.774, 119)
+
+[node name="Node2D" type="Node2D"]
+position = Vector2(1, 0)
+
+[node name="Player" type="CharacterBody2D" parent="."]
+script = ExtResource("1_5iw0s")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+position = Vector2(-1.5, 1)
+scale = Vector2(0.0244141, 0.0244141)
+texture = ExtResource("2_hjkx2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("CircleShape2D_yofdp")
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(-38, 170)
+scale = Vector2(10.6, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-1.88679, -6.5)
+shape = SubResource("RectangleShape2D_gv683")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+texture = ExtResource("2_b04xy")
