@@ -1,11 +1,47 @@
-[gd_scene load_steps=6 format=3 uid="uid://ctfpkhv8qpwtx"]
+[gd_scene load_steps=11 format=3 uid="uid://ctfpkhv8qpwtx"]
 
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="1_5iw0s"]
 [ext_resource type="Texture2D" uid="uid://c5l1djnqgc0j3" path="res://Aperture science/icon.svg" id="2_b04xy"]
-[ext_resource type="Texture2D" uid="uid://b3cqtudg2qys" path="res://Aperture science/photo de moi.jpg" id="2_hjkx2"]
+[ext_resource type="Texture2D" uid="uid://du03mmqttv68" path="res://Aperture science/AnimationSheet_Character.png" id="2_xwumx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_yofdp"]
-radius = 53.0094
+radius = 32.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pnbt2"]
+atlas = ExtResource("2_xwumx")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5ufi7"]
+atlas = ExtResource("2_xwumx")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kmhsd"]
+atlas = ExtResource("2_xwumx")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b4w7q"]
+atlas = ExtResource("2_xwumx")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nv1r0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pnbt2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5ufi7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kmhsd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b4w7q")
+}],
+"loop": true,
+"name": &"Immobile",
+"speed": 7.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gv683"]
 size = Vector2(123.774, 119)
@@ -16,15 +52,18 @@ position = Vector2(1, 0)
 [node name="Player" type="CharacterBody2D" parent="."]
 script = ExtResource("1_5iw0s")
 
-[node name="Sprite2D" type="Sprite2D" parent="Player"]
-position = Vector2(-1.5, 1)
-scale = Vector2(0.0244141, 0.0244141)
-texture = ExtResource("2_hjkx2")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 shape = SubResource("CircleShape2D_yofdp")
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player"]
+position = Vector2(1, -5)
+scale = Vector2(2.32813, 2.32813)
+sprite_frames = SubResource("SpriteFrames_nv1r0")
+animation = &"Immobile"
+autoplay = "Immobile"
+frame_progress = 0.854196
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(-38, 170)
