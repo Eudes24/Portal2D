@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://ctfpkhv8qpwtx"]
+[gd_scene load_steps=41 format=3 uid="uid://ctfpkhv8qpwtx"]
 
 [ext_resource type="PackedScene" uid="uid://djdh7g4hpdf7n" path="res://killzone.tscn" id="1_yf8df"]
 [ext_resource type="Texture2D" uid="uid://dmwsr3nthveax" path="res://Aperture science/lab_tileset_revamped_LITE/lab_tileset_LITE/lab_tileset_LITE.png" id="2_pcx38"]
@@ -422,6 +422,34 @@ region = Rect2(192, 160, 32, 32)
 atlas = ExtResource("4_sjds8")
 region = Rect2(224, 160, 32, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_wo8h8"]
+atlas = ExtResource("4_sjds8")
+region = Rect2(32, 256, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xrqnq"]
+atlas = ExtResource("4_sjds8")
+region = Rect2(64, 256, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yr8m8"]
+atlas = ExtResource("4_sjds8")
+region = Rect2(96, 256, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cub76"]
+atlas = ExtResource("4_sjds8")
+region = Rect2(128, 256, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4r0i1"]
+atlas = ExtResource("4_sjds8")
+region = Rect2(160, 256, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e7vav"]
+atlas = ExtResource("4_sjds8")
+region = Rect2(192, 256, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_26b5m"]
+atlas = ExtResource("4_sjds8")
+region = Rect2(224, 256, 32, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_rhnf4"]
 atlas = ExtResource("4_sjds8")
 region = Rect2(0, 96, 32, 32)
@@ -515,6 +543,32 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_wo8h8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xrqnq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yr8m8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cub76")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4r0i1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e7vav")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_26b5m")
+}],
+"loop": false,
+"name": &"Portals",
+"speed": 11.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_rhnf4")
 }, {
 "duration": 1.0,
@@ -601,9 +655,9 @@ shape = SubResource("CapsuleShape2D_s1xqx")
 position = Vector2(2.25008, -3.74992)
 scale = Vector2(2.32813, 2.32813)
 sprite_frames = SubResource("SpriteFrames_nv1r0")
-animation = &"Jumping"
+animation = &"Portals"
 autoplay = "Immobile"
-frame = 2
+frame = 6
 frame_progress = 1.0
 
 [node name="Camera2D" type="Camera2D" parent="."]

@@ -43,18 +43,20 @@ public partial class Player : CharacterBody2D
 			_animatedSprite.Play("Immobile");
 			}
 		}
-		
-		if (Input.IsActionPressed("ui_left"))
+		if (IsOnFloor())
 		{
-			_animatedSprite.FlipH = true;
-			_animatedSprite.Play("Running");
-		} 
-		
-		if (Input.IsActionPressed("ui_right"))
-		{
-			_animatedSprite.FlipH = false;
-			_animatedSprite.Play("Running");
-		} 
+			if (Input.IsActionPressed("ui_left"))
+			{
+				_animatedSprite.FlipH = true;
+				_animatedSprite.Play("Running");
+			} 
+			
+			if (Input.IsActionPressed("ui_right"))
+			{
+				_animatedSprite.FlipH = false;
+				_animatedSprite.Play("Running");
+			} 
+		}
 		
 		if (Input.IsActionPressed("ui_down"))
 		{
@@ -68,7 +70,6 @@ public partial class Player : CharacterBody2D
 		{
 			IsSneaking = false;
 		}
-		
 		// Handle Jump.
 		if (Input.IsActionJustPressed("Sauter") && IsOnFloor())
 		{
