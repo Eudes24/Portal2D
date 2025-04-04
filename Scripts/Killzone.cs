@@ -3,27 +3,27 @@ using System;
 
 public partial class Killzone : Area2D
 {
-	public string MessageMort {get; set;}
-	public Timer decompte {get; set;}
+	public string DeathMessage {get; set;}
+	public Timer timer {get; set;}
 	
 	public Killzone ()
 	{
-		MessageMort = "Tu es mort!";
+		DeathMessage = "Tu es mort!";
 		Connect("body_entered", new Callable(this, nameof(OnBodyEntered)));
 
 		// Créer et configurer le Timer
-		decompte = new Timer();
-		decompte.WaitTime = 2.0f; 
-		decompte.OneShot = true;
-		decompte.Connect("timeout", new Callable(this, nameof(OnTimerTimeout)));
-		AddChild(decompte);
+		timer = new Timer();
+		timer.WaitTime = 2.0f; 
+		timer.OneShot = true;
+		timer.Connect("timeout", new Callable(this, nameof(OnTimerTimeout)));
+		AddChild(timer);
 	}
 	public void OnBodyEntered(Node body)
 	{
 		if (body is Player player)
 		{
-			GD.Print(MessageMort);
-			decompte.Start();
+			GD.Print(DeathMessage);
+			timer.Start();
 		}
 	}
 	public void OnTimerTimeout()

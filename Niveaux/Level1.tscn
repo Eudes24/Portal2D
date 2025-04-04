@@ -611,13 +611,13 @@ animations = [{
 "speed": 11.0
 }]
 
-[node name="Niveau1" type="Node2D"]
+[node name="Level1" type="Node2D"]
 position = Vector2(1, 0)
 
-[node name="ZoneDeMort" parent="." instance=ExtResource("1_yf8df")]
+[node name="Killzone" parent="." instance=ExtResource("1_yf8df")]
 position = Vector2(191, 328)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneDeMort"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
 position = Vector2(1, 1)
 shape = SubResource("WorldBoundaryShape2D_wywfr")
 
