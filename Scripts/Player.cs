@@ -2,16 +2,15 @@ using System;
 using Godot;
 
 public partial class Player : CharacterBody2D
-{
-	[Export] public Area2D BluePortal;
-	[Export] public Area2D OrangePortal;
-	
+{	
 	public const float MaxSpeed = 250.0f;
 	public const float JumpVelocity = -400.0f;
 	public const float Acceleration = 1200.0f;
 	public const float Friction = 800.0f;
 
 	private AnimatedSprite2D _animatedSprite;
+	public Area2D OrangePortal;
+	public Area2D BluePortal;
 	private bool IsSneaking = false;
 	private bool InTheAir = false;
 	private bool canShootPortal = true;
@@ -19,6 +18,8 @@ public partial class Player : CharacterBody2D
 	public override void _Ready()
 	{
 		_animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		BluePortal = GetTree().GetCurrentScene().FindChild("BluePortal") as Area2D;
+		OrangePortal = GetTree().GetCurrentScene().FindChild("OrangePortal") as Area2D;
 	}	
 	
 	public override void _PhysicsProcess(double delta)
@@ -119,7 +120,7 @@ public partial class Player : CharacterBody2D
 		{
 			From = start,
 			To = start + direction * maxDistance,
-			CollisionMask = 1, // mets le layer correspondant aux murs
+			CollisionMask = 1, // put the layer of the walls
 		};
 
 		var result = space.IntersectRay(query);
@@ -130,13 +131,12 @@ public partial class Player : CharacterBody2D
 			Vector2 hitNormal = (Vector2)result["normal"];
 
 			portalToPlace.GlobalPosition = hitPoint+ hitNormal*1;
-			portalToPlace.Rotation = hitNormal.Angle(); // orienté selon la surface
+			portalToPlace.Rotation = hitNormal.Angle(); // orientation of the wall/ground
 
-			GD.Print($"Portail placé à {hitPoint} avec une normale {hitNormal}");
 		}
 		else
 		{
-			GD.Print("Pas de mur détecté");
+			GD.Print("No wall detected"); // if no wall where the player shoots
 		}
 	}
 	
