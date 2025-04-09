@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Portal 2D"
-run/main_scene="res://Niveaux/Niveau1.tscn"
+run/main_scene="res://Niveaux/Level1.tscn"
 config/features=PackedStringArray("4.3", "C#", "Mobile")
 config/icon="res://Aperture science/icon.svg"
 

@@ -3,93 +3,165 @@ using Godot;
 
 public partial class Player : CharacterBody2D
 {
-	public const float Speed = 250.0f;
+	[Export] public Area2D BluePortal;
+	[Export] public Area2D OrangePortal;
+	
+	public const float MaxSpeed = 250.0f;
 	public const float JumpVelocity = -400.0f;
+	public const float Acceleration = 1200.0f;
+	public const float Friction = 800.0f;
+
 	private AnimatedSprite2D _animatedSprite;
 	private bool IsSneaking = false;
 	private bool InTheAir = false;
+	private bool canShootPortal = true;
 
 	public override void _Ready()
 	{
 		_animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 	}	
 	
-	
 	public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
 
-		// Ajout de gravité
+		//gravity
 		if (!IsOnFloor())
-		{
 			velocity += GetGravity() * (float)delta;
-		}
 
-
-		// Get the input direction and handle the movement/deceleration.
-		// As good practice, you should replace UI actions with custom gameplay actions.
+		//direction keys
 		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-		if (direction != Vector2.Zero)
-		{
-			velocity.X = direction.X * Speed;
-			
-		}
-		
-		else
-		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-			if(!InTheAir && !(_animatedSprite.IsPlaying() && _animatedSprite.Animation == "Landing"))
-			{
-			_animatedSprite.Play("Immobile");
-			}
-		}
+
+		//on the ground
 		if (IsOnFloor())
 		{
-			if (Input.IsActionPressed("ui_left"))
+			velocity.X = direction.X * MaxSpeed;
+		}
+		else //in the air
+		{
+			if (direction.X != 0)
+			{
+				velocity.X = Mathf.MoveToward(velocity.X, direction.X * MaxSpeed, Acceleration * (float)delta);
+			}
+			else
+			{
+				velocity.X = Mathf.MoveToward(velocity.X, 0, Friction * (float)delta);
+			}
+		}
+
+		//sprite animations
+		if (IsOnFloor())
+		{
+			if (direction.X < 0)
 			{
 				_animatedSprite.FlipH = true;
 				_animatedSprite.Play("Running");
-			} 
+			}
 			
-			if (Input.IsActionPressed("ui_right"))
+			else if (direction.X > 0)
 			{
 				_animatedSprite.FlipH = false;
 				_animatedSprite.Play("Running");
-			} 
-		}
-		
-		if (Input.IsActionPressed("ui_down"))
-		{
-			if (IsSneaking == false)
-			{
-				_animatedSprite.Play("Sneak");
-				IsSneaking = true;
 			}
-		} 
-		else 
-		{
-			IsSneaking = false;
+			
+			else if (!InTheAir && !(_animatedSprite.IsPlaying() && _animatedSprite.Animation == "Landing"))
+			{
+				_animatedSprite.Play("Iddle");
+			}
+			
+			if (Input.IsActionPressed("ui_down"))
+			{
+				if (!IsSneaking)
+				{
+					_animatedSprite.Play("Sneak");
+					IsSneaking = true;
+				}
+			}
+			
+			else
+			{
+				IsSneaking = false;
+			}
 		}
-		// Handle Jump.
-		if (Input.IsActionJustPressed("Sauter") && IsOnFloor())
+
+		//jumps
+		if (Input.IsActionPressed("ui_up") && IsOnFloor())
 		{
 			velocity.Y = JumpVelocity;
 			_animatedSprite.Play("Jumping");
 		}
-		
+
 		if (IsOnFloor())
 		{
 			if (InTheAir)
-			{
 				_animatedSprite.Play("Landing");
-			}
 			InTheAir = false;
 		}
-		else{
+
+		else
+		{
 			InTheAir = true;
 		}
-
 		Velocity = velocity;
 		MoveAndSlide();
+	}
+	
+	private void ShootPortal(Area2D portalToPlace)
+	{
+		var space = GetWorld2D().DirectSpaceState;
+
+		Vector2 start = GlobalPosition;
+		Vector2 mousePos = GetGlobalMousePosition();
+		Vector2 direction = (mousePos - start).Normalized();
+		float maxDistance = 1000f;
+
+		var query = new PhysicsRayQueryParameters2D
+		{
+			From = start,
+			To = start + direction * maxDistance,
+			CollisionMask = 1, // mets le layer correspondant aux murs
+		};
+
+		var result = space.IntersectRay(query);
+
+		if (result.Count > 0)
+		{
+			Vector2 hitPoint = (Vector2)result["position"];
+			Vector2 hitNormal = (Vector2)result["normal"];
+
+			portalToPlace.GlobalPosition = hitPoint+ hitNormal*1;
+			portalToPlace.Rotation = hitNormal.Angle(); // orienté selon la surface
+
+			GD.Print($"Portail placé à {hitPoint} avec une normale {hitNormal}");
+		}
+		else
+		{
+			GD.Print("Pas de mur détecté");
+		}
+	}
+	
+	public override void _Input(InputEvent e)
+	{
+		if (e is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
+		{
+			string sceneName = GetTree().CurrentScene.Name;
+			if (sceneName == "Level1" || sceneName == "Level2")
+			{
+				canShootPortal = false;
+			}
+			
+			if (mouseEvent.ButtonIndex == MouseButton.Left && canShootPortal)
+			{
+				ShootPortal(BluePortal);
+				_animatedSprite.Play("ShootPortal");
+			}
+			else if (mouseEvent.ButtonIndex == MouseButton.Right && canShootPortal)
+			{
+				ShootPortal(OrangePortal);
+				_animatedSprite.Play("ShootPortal");
+			}
+			
+			canShootPortal = true;
+		}
 	}
 }
