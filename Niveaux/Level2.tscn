@@ -8,7 +8,7 @@
 [ext_resource type="Script" path="res://Scripts/NextLevel.cs" id="9_i0knt"]
 [ext_resource type="Texture2D" uid="uid://dvt31hr72q1v8" path="res://Aperture science/lab_tileset_revamped_LITE/lab_tileset_LITE/seperated/tile028.png" id="10_pmwjn"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xkqy8"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_t1xqm"]
 texture = ExtResource("1_5mj3c")
 14:2/0 = 0
 15:2/0 = 0
@@ -373,7 +373,7 @@ texture = ExtResource("1_5mj3c")
 
 [sub_resource type="TileSet" id="TileSet_en0rw"]
 physics_layer_0/collision_layer = 1
-sources/1 = SubResource("TileSetAtlasSource_xkqy8")
+sources/1 = SubResource("TileSetAtlasSource_t1xqm")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6sr1n"]
 

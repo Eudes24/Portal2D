@@ -82,12 +82,12 @@ b = Vector2(0, 52)
 script = ExtResource("1_0eicy")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(-3.80955, 0.5)
+position = Vector2(-2.38419e-07, 0)
 scale = Vector2(0.0761903, 0.278125)
 sprite_frames = SubResource("SpriteFrames_l7i81")
 animation = &"Portal"
 autoplay = "Portal"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-2, -23)
+position = Vector2(2, -25)
 shape = SubResource("SegmentShape2D_1egtt")

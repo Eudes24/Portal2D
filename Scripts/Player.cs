@@ -2,74 +2,96 @@ using System;
 using Godot;
 
 public partial class Player : CharacterBody2D
-{	
+{
 	public const float MaxSpeed = 250.0f;
 	public const float JumpVelocity = -400.0f;
 	public const float Acceleration = 1200.0f;
 	public const float Friction = 800.0f;
 
+	private Timer _portalAnimTimer;
 	private AnimatedSprite2D _animatedSprite;
-	public Area2D OrangePortal;
-	public Area2D BluePortal;
+	public Portal OrangePortal;
+	public Portal BluePortal;
+	private Vector2 _nextVelocity = Vector2.Zero;
+	
+	private bool IsShootingPortal = false;
+	private bool _forceNextVelocity = false;
+	private bool _justTeleported = false;
 	private bool IsSneaking = false;
 	private bool InTheAir = false;
 	private bool canShootPortal = true;
-
+	private bool NoAnimationShoot = false;
+	
 	public override void _Ready()
 	{
 		_animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-		BluePortal = GetTree().GetCurrentScene().FindChild("BluePortal") as Area2D;
-		OrangePortal = GetTree().GetCurrentScene().FindChild("OrangePortal") as Area2D;
-	}	
-	
+		_animatedSprite.AnimationFinished += OnAnimationFinished;
+		BluePortal = GetTree().GetCurrentScene().FindChild("BluePortal") as Portal;
+		OrangePortal = GetTree().GetCurrentScene().FindChild("OrangePortal") as Portal;
+		_portalAnimTimer = new Timer();
+		_portalAnimTimer.WaitTime = 0.1f; // durée de l'animation de tir
+		_portalAnimTimer.OneShot = true;
+		AddChild(_portalAnimTimer);
+		_portalAnimTimer.Timeout += () => {
+			IsShootingPortal = false;
+};
+
+	}
+
 	public override void _PhysicsProcess(double delta)
 	{
-		Vector2 velocity = Velocity;
+		if (_forceNextVelocity)
+		{
+			Velocity = _nextVelocity;
+			_forceNextVelocity = false;
+			_justTeleported = true;
+		}
 
-		//gravity
+		if (_justTeleported)
+		{
+			MoveAndSlide();
+			_justTeleported = false;
+			return;
+		}
+
+		// GRAVITY
 		if (!IsOnFloor())
-			velocity += GetGravity() * (float)delta;
+			Velocity += GetGravity() * (float)delta;
 
-		//direction keys
+		// MOUVEMENT HORIZONTAL
 		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
 
-		//on the ground
 		if (IsOnFloor())
 		{
-			velocity.X = direction.X * MaxSpeed;
+			Velocity = new Vector2(direction.X * MaxSpeed, Velocity.Y);
 		}
-		else //in the air
+		else
 		{
 			if (direction.X != 0)
-			{
-				velocity.X = Mathf.MoveToward(velocity.X, direction.X * MaxSpeed, Acceleration * (float)delta);
-			}
+				Velocity = new Vector2(Mathf.MoveToward(Velocity.X, direction.X * MaxSpeed, Acceleration * (float)delta), Velocity.Y);
 			else
-			{
-				velocity.X = Mathf.MoveToward(velocity.X, 0, Friction * (float)delta);
-			}
+				Velocity = new Vector2(Mathf.MoveToward(Velocity.X, 0, Friction * (float)delta), Velocity.Y);
 		}
 
-		//sprite animations
+		// Animations
 		if (IsOnFloor())
 		{
+			if (IsShootingPortal)return; // empêche les autres animations de s’enclencher
 			if (direction.X < 0)
 			{
 				_animatedSprite.FlipH = true;
 				_animatedSprite.Play("Running");
 			}
-			
 			else if (direction.X > 0)
 			{
 				_animatedSprite.FlipH = false;
 				_animatedSprite.Play("Running");
 			}
-			
-			else if (!InTheAir && !(_animatedSprite.IsPlaying() && _animatedSprite.Animation == "Landing"))
+			else if (!IsShootingPortal && !IsSneaking)
 			{
 				_animatedSprite.Play("Iddle");
 			}
-			
+
 			if (Input.IsActionPressed("ui_down"))
 			{
 				if (!IsSneaking)
@@ -78,89 +100,124 @@ public partial class Player : CharacterBody2D
 					IsSneaking = true;
 				}
 			}
-			
 			else
 			{
 				IsSneaking = false;
 			}
 		}
 
-		//jumps
+		// JUMP
 		if (Input.IsActionPressed("ui_up") && IsOnFloor())
 		{
-			velocity.Y = JumpVelocity;
+			Velocity = new Vector2(Velocity.X, JumpVelocity);
 			_animatedSprite.Play("Jumping");
 		}
 
+		// IN THE AIR
 		if (IsOnFloor())
 		{
 			if (InTheAir)
 				_animatedSprite.Play("Landing");
 			InTheAir = false;
 		}
-
 		else
 		{
 			InTheAir = true;
 		}
-		Velocity = velocity;
 		MoveAndSlide();
 	}
-	
-	private void ShootPortal(Area2D portalToPlace)
+	private void OnAnimationFinished()
 	{
-		var space = GetWorld2D().DirectSpaceState;
+		if (_animatedSprite.Animation == "ShootPortal")
+		{
+			// Détermine la bonne animation à jouer ensuite
+			if (!IsOnFloor())
+			{
+				_animatedSprite.Play("Jumping");
+			}
+			else if (IsSneaking)
+			{
+				_animatedSprite.Play("Sneak");
+			}
+			else
+			{
+				_animatedSprite.Play("Idle");
+			}
+		}
+	}
 
-		Vector2 start = GlobalPosition;
+	public void ForceVelocityAfterTeleport(Vector2 newVelocity)
+	{
+		_nextVelocity = newVelocity;
+		_forceNextVelocity = true;
+	}
+
+	private void ShootPortal(Portal portalToPlace)
+	{
+		// Tourner le personnage vers la souris
 		Vector2 mousePos = GetGlobalMousePosition();
+		if (mousePos.X < GlobalPosition.X)
+			_animatedSprite.FlipH = true;
+		else
+			_animatedSprite.FlipH = false;
+		var space = GetWorld2D().DirectSpaceState;
+		Vector2 start = GlobalPosition;
 		Vector2 direction = (mousePos - start).Normalized();
-		float maxDistance = 1000f;
+		float maxDistance = 10000f;
 
 		var query = new PhysicsRayQueryParameters2D
 		{
 			From = start,
 			To = start + direction * maxDistance,
-			CollisionMask = 1, // put the layer of the walls
+			CollisionMask = 1,
 		};
 
 		var result = space.IntersectRay(query);
 
-		if (result.Count > 0)
+		if (result.Count > 0 && ((Node)result["collider"]).IsInGroup("Portalable"))
 		{
 			Vector2 hitPoint = (Vector2)result["position"];
 			Vector2 hitNormal = (Vector2)result["normal"];
+			float offsetDistance = 10f;
+			portalToPlace.GlobalPosition = hitPoint + hitNormal * offsetDistance;
+			NoAnimationShoot = false;
 
-			portalToPlace.GlobalPosition = hitPoint+ hitNormal*1;
-			portalToPlace.Rotation = hitNormal.Angle(); // orientation of the wall/ground
-
+			// On veut que le portail "regarde" à l'opposé de la normale
+			Vector2 portalForward = -hitNormal; // vers l’extérieur
+			portalToPlace.Rotation = portalForward.Angle();
+			
 		}
 		else
 		{
-			GD.Print("No wall detected"); // if no wall where the player shoots
+			NoAnimationShoot = true;
+			GD.Print("No wall detected");
 		}
 	}
-	
+
 	public override void _Input(InputEvent e)
 	{
 		if (e is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
 		{
 			string sceneName = GetTree().CurrentScene.Name;
 			if (sceneName == "Level1" || sceneName == "Level2")
-			{
 				canShootPortal = false;
-			}
-			
+
 			if (mouseEvent.ButtonIndex == MouseButton.Left && canShootPortal)
 			{
 				ShootPortal(BluePortal);
-				_animatedSprite.Play("ShootPortal");
+				IsShootingPortal = true;
+				if (!NoAnimationShoot)_animatedSprite.Play("ShootPortal");
+				_portalAnimTimer.Start();
+				OrangePortal.open = true;
 			}
 			else if (mouseEvent.ButtonIndex == MouseButton.Right && canShootPortal)
 			{
 				ShootPortal(OrangePortal);
-				_animatedSprite.Play("ShootPortal");
+				IsShootingPortal = true;
+				if (!NoAnimationShoot)_animatedSprite.Play("ShootPortal");
+				_portalAnimTimer.Start();
+				BluePortal.open = true;
 			}
-			
 			canShootPortal = true;
 		}
 	}

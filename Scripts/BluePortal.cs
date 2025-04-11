@@ -1,26 +1,25 @@
 using Godot;
 using System;
 
-public partial class BluePortal : Area2D
+public partial class BluePortal : Portal
 {
 	[Export]
-	public NodePath DestinationPortalPath; // Reference to the other portal
+	public NodePath DestinationPortalPath;
 	private OrangePortal DestinationPortal;
 	private bool _canTeleport = true;
-	public BluePortal ()
+
+	public BluePortal()
 	{
 		Connect("body_entered", new Callable(this, nameof(OnBodyEntered)));
 	}
 
-   public override void _Ready()
+	public override void _Ready()
 	{
 		if (DestinationPortalPath != null)
 		{
 			DestinationPortal = GetNodeOrNull<OrangePortal>(DestinationPortalPath);
 			if (DestinationPortal == null)
-			{
 				GD.PrintErr("ERREUR : Impossible de trouver le portail de destination !");
-			}
 		}
 		else
 		{
@@ -46,14 +45,25 @@ public partial class BluePortal : Area2D
 	public void OnBodyEntered(Node body)
 	{
 		if (!_canTeleport) return;
-		GD.Print("The player is in the portal."); // Check if OnbodyEntered is connected
-		GD.Print("DestinationPortal: ", DestinationPortal);
-		if (body is Player player && DestinationPortal != null)
+
+		if (body is Player player && DestinationPortal != null && open)
 		{
-			GD.Print("Téléportation en cours..."); // check if DestinationPortal works
-			DestinationPortal.BlockTeleportTemporarily(); // Avoid inifint TP
-			// Teleport the player to the destination portal
-			player.GlobalPosition = DestinationPortal.GlobalPosition;
+			DestinationPortal.BlockTeleportTemporarily();
+			Vector2 inputVelocity = player.Velocity;
+			Vector2 inNormal = -GlobalTransform.X;
+			Vector2 outNormal = DestinationPortal.GlobalTransform.X;
+			float angleDiff = outNormal.AngleTo(inNormal);
+			Vector2 rotatedVelocity = inputVelocity.Rotated(angleDiff);
+
+			Vector2 exitDir = -DestinationPortal.GlobalTransform.Y.Normalized();
+			float offset = 20f;
+			player.GlobalPosition = DestinationPortal.GlobalPosition + exitDir * offset;
+			// 🔥 ICI : on applique la vélocité transformée
+			player.ForceVelocityAfterTeleport(rotatedVelocity);
+			if (rotatedVelocity.Length() < 10f)
+			{
+				rotatedVelocity = DestinationPortal.GlobalTransform.X * 200f;
+			}
 		}
 	}
 }

@@ -19,6 +19,10 @@ config/icon="res://Aperture science/icon.svg"
 
 project/assembly_name="Portal 2D"
 
+[global_group]
+
+Portalable="Wall that can have a portal"
+
 [input]
 
 Sauter={
