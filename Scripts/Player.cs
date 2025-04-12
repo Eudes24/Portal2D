@@ -13,7 +13,7 @@ public partial class Player : CharacterBody2D
 	public Portal OrangePortal;
 	public Portal BluePortal;
 	private Vector2 _nextVelocity = Vector2.Zero;
-	
+
 	private bool IsShootingPortal = false;
 	private bool _forceNextVelocity = false;
 	private bool _justTeleported = false;
@@ -24,18 +24,21 @@ public partial class Player : CharacterBody2D
 	
 	public override void _Ready()
 	{
+		string sceneName1 = GetTree().CurrentScene.Name;
+		if (sceneName1 != "Level1" && sceneName1 != "Level2")
+			Input.SetCustomMouseCursor(ResourceLoader.Load<Texture2D>("res://Aperture science/Normal.png"));
 		_animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		_animatedSprite.AnimationFinished += OnAnimationFinished;
 		BluePortal = GetTree().GetCurrentScene().FindChild("BluePortal") as Portal;
 		OrangePortal = GetTree().GetCurrentScene().FindChild("OrangePortal") as Portal;
 		_portalAnimTimer = new Timer();
-		_portalAnimTimer.WaitTime = 0.1f; // durée de l'animation de tir
+		_portalAnimTimer.WaitTime = 0.1f; // Duration when shooting animation
 		_portalAnimTimer.OneShot = true;
 		AddChild(_portalAnimTimer);
-		_portalAnimTimer.Timeout += () => {
+		_portalAnimTimer.Timeout += () =>
+		{
 			IsShootingPortal = false;
-};
-
+		};
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -54,11 +57,11 @@ public partial class Player : CharacterBody2D
 			return;
 		}
 
-		// GRAVITY
+		// Gravity
 		if (!IsOnFloor())
 			Velocity += GetGravity() * (float)delta;
 
-		// MOUVEMENT HORIZONTAL
+		// horizontal moves
 		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
 
 		if (IsOnFloor())
@@ -68,15 +71,26 @@ public partial class Player : CharacterBody2D
 		else
 		{
 			if (direction.X != 0)
-				Velocity = new Vector2(Mathf.MoveToward(Velocity.X, direction.X * MaxSpeed, Acceleration * (float)delta), Velocity.Y);
+				Velocity = new Vector2(
+					Mathf.MoveToward(
+						Velocity.X,
+						direction.X * MaxSpeed,
+						Acceleration * (float)delta
+					),
+					Velocity.Y
+				);
 			else
-				Velocity = new Vector2(Mathf.MoveToward(Velocity.X, 0, Friction * (float)delta), Velocity.Y);
+				Velocity = new Vector2(
+					Mathf.MoveToward(Velocity.X, 0, Friction * (float)delta),
+					Velocity.Y
+				);
 		}
 
 		// Animations
 		if (IsOnFloor())
 		{
-			if (IsShootingPortal)return; // empêche les autres animations de s’enclencher
+			if (IsShootingPortal)
+				return; // No other animation plays when the player shoots portal
 			if (direction.X < 0)
 			{
 				_animatedSprite.FlipH = true;
@@ -106,14 +120,14 @@ public partial class Player : CharacterBody2D
 			}
 		}
 
-		// JUMP
+		// Jump
 		if (Input.IsActionPressed("ui_up") && IsOnFloor())
 		{
 			Velocity = new Vector2(Velocity.X, JumpVelocity);
 			_animatedSprite.Play("Jumping");
 		}
 
-		// IN THE AIR
+		// In the air
 		if (IsOnFloor())
 		{
 			if (InTheAir)
@@ -126,11 +140,12 @@ public partial class Player : CharacterBody2D
 		}
 		MoveAndSlide();
 	}
+
 	private void OnAnimationFinished()
 	{
 		if (_animatedSprite.Animation == "ShootPortal")
 		{
-			// Détermine la bonne animation à jouer ensuite
+			// Plays the right animation after shooting portal
 			if (!IsOnFloor())
 			{
 				_animatedSprite.Play("Jumping");
@@ -152,9 +167,16 @@ public partial class Player : CharacterBody2D
 		_forceNextVelocity = true;
 	}
 
+	public override void _UnhandledInput(InputEvent @event)
+	{
+		if (@event.IsActionPressed("Pause"))
+		{
+			((PauseMenu)GetNode("../PauseMenu")).TogglePause();
+		}
+	}
 	private void ShootPortal(Portal portalToPlace)
 	{
-		// Tourner le personnage vers la souris
+		// Turn the character to the mouse 
 		Vector2 mousePos = GetGlobalMousePosition();
 		if (mousePos.X < GlobalPosition.X)
 			_animatedSprite.FlipH = true;
@@ -182,10 +204,9 @@ public partial class Player : CharacterBody2D
 			portalToPlace.GlobalPosition = hitPoint + hitNormal * offsetDistance;
 			NoAnimationShoot = false;
 
-			// On veut que le portail "regarde" à l'opposé de la normale
-			Vector2 portalForward = -hitNormal; // vers l’extérieur
+			// Correct the orientation of the portal to face the player
+			Vector2 portalForward = -hitNormal;
 			portalToPlace.Rotation = portalForward.Angle();
-			
 		}
 		else
 		{
@@ -206,7 +227,8 @@ public partial class Player : CharacterBody2D
 			{
 				ShootPortal(BluePortal);
 				IsShootingPortal = true;
-				if (!NoAnimationShoot)_animatedSprite.Play("ShootPortal");
+				if (!NoAnimationShoot)
+					_animatedSprite.Play("ShootPortal");
 				_portalAnimTimer.Start();
 				OrangePortal.open = true;
 			}
@@ -214,7 +236,8 @@ public partial class Player : CharacterBody2D
 			{
 				ShootPortal(OrangePortal);
 				IsShootingPortal = true;
-				if (!NoAnimationShoot)_animatedSprite.Play("ShootPortal");
+				if (!NoAnimationShoot)
+					_animatedSprite.Play("ShootPortal");
 				_portalAnimTimer.Start();
 				BluePortal.open = true;
 			}

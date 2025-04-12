@@ -1,5 +1,5 @@
-using Godot;
 using System;
+using Godot;
 
 public partial class NextLevel : Area2D
 {
@@ -17,7 +17,7 @@ public partial class NextLevel : Area2D
 		{
 			GD.Print("GG WP, go next now");
 			NumberNextLevel++;
-			
+
 			// Using calldeffered to avoid a warning about suppression while changin scene
 			CallDeferred(nameof(ChangeScene));
 		}

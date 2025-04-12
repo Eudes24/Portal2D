@@ -1,5 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://ctfpkhv8qpwtx"]
+[gd_scene load_steps=10 format=3 uid="uid://ctfpkhv8qpwtx"]
 
+[ext_resource type="PackedScene" uid="uid://b81ll4aahpv5h" path="res://Niveaux/PauseMenu.tscn" id="1_jywp8"]
 [ext_resource type="PackedScene" uid="uid://djdh7g4hpdf7n" path="res://Niveaux/killzone.tscn" id="1_yf8df"]
 [ext_resource type="Texture2D" uid="uid://dmwsr3nthveax" path="res://Aperture science/lab_tileset_revamped_LITE/lab_tileset_LITE/lab_tileset_LITE.png" id="2_pcx38"]
 [ext_resource type="PackedScene" uid="uid://chnf2pcc8066s" path="res://Niveaux/player.tscn" id="5_0mdg8"]
@@ -377,6 +378,8 @@ sources/1 = SubResource("TileSetAtlasSource_1wxlb")
 
 [node name="Level1" type="Node2D"]
 position = Vector2(1, 0)
+
+[node name="PauseMenu" parent="." instance=ExtResource("1_jywp8")]
 
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2(2, 0)

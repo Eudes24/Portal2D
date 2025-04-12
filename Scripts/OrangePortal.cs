@@ -1,5 +1,5 @@
-using Godot;
 using System;
+using Godot;
 
 public partial class OrangePortal : Portal
 {
@@ -15,6 +15,14 @@ public partial class OrangePortal : Portal
 
 	public override void _Ready()
 	{
+		string sceneName = GetTree().CurrentScene.Name;
+		if (sceneName == "Level2")
+			open = true;
+		else
+		{
+			open = false;
+		}
+
 		if (DestinationPortalPath != null)
 		{
 			DestinationPortal = GetNodeOrNull<BluePortal>(DestinationPortalPath);
@@ -42,9 +50,10 @@ public partial class OrangePortal : Portal
 		timer.Start();
 	}
 
-		public void OnBodyEntered(Node body)
+	public void OnBodyEntered(Node body)
 	{
-		if (!_canTeleport) return;
+		if (!_canTeleport)
+			return;
 
 		if (body is Player player && DestinationPortal != null && open)
 		{
@@ -58,11 +67,11 @@ public partial class OrangePortal : Portal
 			Vector2 exitDir = -DestinationPortal.GlobalTransform.Y.Normalized();
 			float offset = 20f;
 			player.GlobalPosition = DestinationPortal.GlobalPosition + exitDir * offset;
-			// 🔥 ICI : on applique la vélocité transformée
 			player.ForceVelocityAfterTeleport(rotatedVelocity);
 			if (rotatedVelocity.Length() < 10f)
 			{
 				rotatedVelocity = DestinationPortal.GlobalTransform.X * 200f;
+				rotatedVelocity = DestinationPortal.GlobalTransform.Y * 200f;
 			}
 		}
 	}

@@ -1,23 +1,24 @@
-using Godot;
 using System;
+using Godot;
 
 public partial class Killzone : Area2D
 {
-	public string DeathMessage {get; set;}
-	public Timer timer {get; set;}
-	
-	public Killzone ()
+	public string DeathMessage { get; set; }
+	public Timer timer { get; set; }
+
+	public Killzone()
 	{
 		DeathMessage = "Tu es mort!";
 		Connect("body_entered", new Callable(this, nameof(OnBodyEntered)));
 
-		// Créer et configurer le Timer
+		// Create and initialize timer
 		timer = new Timer();
-		timer.WaitTime = 2.0f; 
+		timer.WaitTime = 2.0f;
 		timer.OneShot = true;
 		timer.Connect("timeout", new Callable(this, nameof(OnTimerTimeout)));
 		AddChild(timer);
 	}
+
 	public void OnBodyEntered(Node body)
 	{
 		if (body is Player player)
@@ -26,8 +27,10 @@ public partial class Killzone : Area2D
 			timer.Start();
 		}
 	}
+
 	public void OnTimerTimeout()
 	{
-		GetTree().ReloadCurrentScene();;
+		GetTree().ReloadCurrentScene();
+		;
 	}
 }
