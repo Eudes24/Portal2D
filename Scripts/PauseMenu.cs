@@ -10,6 +10,11 @@ public partial class PauseMenu : Control
 	var resume = GetNode<Button>("PanelContainer/VBoxContainer/Resume");
 	var restart = GetNode<Button>("PanelContainer/VBoxContainer/Restart");
 	var quit = GetNode<Button>("PanelContainer/VBoxContainer/Quit");
+	
+	resume.Pressed += ResumePressed;
+	restart.Pressed += RestartPressed;
+	quit.Pressed += QuitPressed;
+	Visible = false;
 	}
 
 	public override void _Input(InputEvent @event)
@@ -32,10 +37,12 @@ public partial class PauseMenu : Control
 	private void ResumePressed()
 	{
 		TogglePause();
+		GD.Print("Game resume")
 	}
 
 	private void RestartPressed()
 	{
+		TogglePause();
 		GetTree().Paused = false;
 		GetTree().ReloadCurrentScene();
 	}

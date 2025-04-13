@@ -26,7 +26,7 @@ public partial class Player : CharacterBody2D
 	{
 		string sceneName1 = GetTree().CurrentScene.Name;
 		if (sceneName1 != "Level1" && sceneName1 != "Level2")
-			Input.SetCustomMouseCursor(ResourceLoader.Load<Texture2D>("res://Aperture science/Normal.png"));
+			Input.SetCustomMouseCursor(ResourceLoader.Load<Texture2D>("res://Objects_and_tiles/Normal.png"));
 		_animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		_animatedSprite.AnimationFinished += OnAnimationFinished;
 		BluePortal = GetTree().GetCurrentScene().FindChild("BluePortal") as Portal;
@@ -84,6 +84,12 @@ public partial class Player : CharacterBody2D
 					Mathf.MoveToward(Velocity.X, 0, Friction * (float)delta),
 					Velocity.Y
 				);
+		}
+		
+		if (Input.IsActionPressed("Pause"))
+		{
+			((PauseMenu)GetNode("/root/PauseMenu")).TogglePause();
+			GD.Print("Game paused");
 		}
 
 		// Animations
@@ -156,7 +162,7 @@ public partial class Player : CharacterBody2D
 			}
 			else
 			{
-				_animatedSprite.Play("Idle");
+				_animatedSprite.Play("Iddle");
 			}
 		}
 	}
@@ -169,10 +175,7 @@ public partial class Player : CharacterBody2D
 
 	public override void _UnhandledInput(InputEvent @event)
 	{
-		if (@event.IsActionPressed("Pause"))
-		{
-			((PauseMenu)GetNode("../PauseMenu")).TogglePause();
-		}
+
 	}
 	private void ShootPortal(Portal portalToPlace)
 	{
@@ -211,7 +214,7 @@ public partial class Player : CharacterBody2D
 		else
 		{
 			NoAnimationShoot = true;
-			GD.Print("No wall detected");
+			GD.Print("You can't TP there");
 		}
 	}
 
@@ -230,7 +233,7 @@ public partial class Player : CharacterBody2D
 				if (!NoAnimationShoot)
 					_animatedSprite.Play("ShootPortal");
 				_portalAnimTimer.Start();
-				OrangePortal.open = true;
+				OrangePortal.Open = true;
 			}
 			else if (mouseEvent.ButtonIndex == MouseButton.Right && canShootPortal)
 			{
@@ -239,7 +242,7 @@ public partial class Player : CharacterBody2D
 				if (!NoAnimationShoot)
 					_animatedSprite.Play("ShootPortal");
 				_portalAnimTimer.Start();
-				BluePortal.open = true;
+				BluePortal.Open = true;
 			}
 			canShootPortal = true;
 		}

@@ -4,7 +4,7 @@ using Godot;
 public partial class NextLevel : Area2D
 {
 	public static int NumberNextLevel = 2;
-	public string NextLevelPath = $"res://Niveaux/Level{NumberNextLevel}.tscn";
+	public string NextLevelPath = $"res://Scenes/Level{NumberNextLevel}.tscn";
 
 	public NextLevel()
 	{

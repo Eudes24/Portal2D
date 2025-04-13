@@ -17,10 +17,10 @@ public partial class OrangePortal : Portal
 	{
 		string sceneName = GetTree().CurrentScene.Name;
 		if (sceneName == "Level2")
-			open = true;
+			Open = true;
 		else
 		{
-			open = false;
+			Open = false;
 		}
 
 		if (DestinationPortalPath != null)
@@ -55,7 +55,7 @@ public partial class OrangePortal : Portal
 		if (!_canTeleport)
 			return;
 
-		if (body is Player player && DestinationPortal != null && open)
+		if (body is Player player && DestinationPortal != null && Open)
 		{
 			DestinationPortal.BlockTeleportTemporarily();
 			Vector2 inputVelocity = player.Velocity;
