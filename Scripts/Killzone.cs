@@ -1,15 +1,16 @@
 using System;
 using Godot;
 
+// Scripts that sets up the killzone and restart the level when the character dies
 public partial class Killzone : Area2D
 {
 	public string DeathMessage { get; set; }
-	public Timer timer { get; set; }
+	public Timer timer { get; set; } // Sets up the timer of respawn
 
 	public Killzone()
 	{
 		DeathMessage = "Tu es mort!";
-		Connect("body_entered", new Callable(this, nameof(OnBodyEntered)));
+		Connect("body_entered", new Callable(this, nameof(OnBodyEntered))); // Connect OnBodyEntered function
 
 		// Create and initialize timer
 		timer = new Timer();
@@ -19,7 +20,7 @@ public partial class Killzone : Area2D
 		AddChild(timer);
 	}
 
-	public void OnBodyEntered(Node body)
+	public void OnBodyEntered(Node body) //when the player touches the killzone hitbox
 	{
 		if (body is Player player)
 		{
@@ -28,7 +29,7 @@ public partial class Killzone : Area2D
 		}
 	}
 
-	public void OnTimerTimeout()
+	public void OnTimerTimeout() // reload the scene (respawn)
 	{
 		GetTree().ReloadCurrentScene();
 		;

@@ -115,7 +115,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_woxig")
 theme_override_styles/hover = SubResource("StyleBoxFlat_4fkyi")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_owurf")
 theme_override_styles/normal = SubResource("StyleBoxFlat_piyeg")
-text = "Options"
+text = "Sound Volume"
 
 [node name="OptionsMenu" type="Control" parent="."]
 layout_mode = 1
@@ -153,6 +153,8 @@ offset_left = 271.0
 offset_top = 296.0
 offset_right = 861.0
 offset_bottom = 349.0
+max_value = 1.0
+step = 0.01
 
 [node name="Back" type="Button" parent="OptionsMenu"]
 layout_mode = 1

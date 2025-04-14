@@ -21,12 +21,14 @@ public partial class Player : CharacterBody2D
 	private bool InTheAir = false;
 	private bool canShootPortal = true;
 	private bool NoAnimationShoot = false;
-	
-	public override void _Ready()
+
+	public override void _Ready() // sets up all the animated sprites and timers, avoid the possibility to throw portal if the player is in the 2 first levels, Connect the portal scenes
 	{
 		string sceneName1 = GetTree().CurrentScene.Name;
 		if (sceneName1 != "Level1" && sceneName1 != "Level2")
-			Input.SetCustomMouseCursor(ResourceLoader.Load<Texture2D>("res://Objects_and_tiles/Normal.png"));
+			Input.SetCustomMouseCursor(
+				ResourceLoader.Load<Texture2D>("res://Objects_and_tiles/Normal.png")
+			);
 		_animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		_animatedSprite.AnimationFinished += OnAnimationFinished;
 		BluePortal = GetTree().GetCurrentScene().FindChild("BluePortal") as Portal;
@@ -41,7 +43,7 @@ public partial class Player : CharacterBody2D
 		};
 	}
 
-	public override void _PhysicsProcess(double delta)
+	public override void _PhysicsProcess(double delta) //All the moves and animations
 	{
 		if (_forceNextVelocity)
 		{
@@ -85,7 +87,7 @@ public partial class Player : CharacterBody2D
 					Velocity.Y
 				);
 		}
-		
+
 		if (Input.IsActionPressed("Pause"))
 		{
 			((PauseMenu)GetNode("/root/PauseMenu")).TogglePause();
@@ -147,11 +149,10 @@ public partial class Player : CharacterBody2D
 		MoveAndSlide();
 	}
 
-	private void OnAnimationFinished()
+	private void OnAnimationFinished() // Plays the right animation after shooting portal
 	{
 		if (_animatedSprite.Animation == "ShootPortal")
 		{
-			// Plays the right animation after shooting portal
 			if (!IsOnFloor())
 			{
 				_animatedSprite.Play("Jumping");
@@ -167,19 +168,17 @@ public partial class Player : CharacterBody2D
 		}
 	}
 
-	public void ForceVelocityAfterTeleport(Vector2 newVelocity)
+	public void ForceVelocityAfterTeleport(Vector2 newVelocity) // manage the velocity when out of the portal
 	{
 		_nextVelocity = newVelocity;
 		_forceNextVelocity = true;
 	}
 
-	public override void _UnhandledInput(InputEvent @event)
-	{
+	public override void _UnhandledInput(InputEvent @event) { }
 
-	}
-	private void ShootPortal(Portal portalToPlace)
+	private void ShootPortal(Portal portalToPlace) // shoot the portal where the player mouse is
 	{
-		// Turn the character to the mouse 
+		// Turn the character to the mouse
 		Vector2 mousePos = GetGlobalMousePosition();
 		if (mousePos.X < GlobalPosition.X)
 			_animatedSprite.FlipH = true;

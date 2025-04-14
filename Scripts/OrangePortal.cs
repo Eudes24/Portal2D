@@ -1,19 +1,20 @@
 using System;
 using Godot;
 
+// Here is the class that sets up the orange Portal.
 public partial class OrangePortal : Portal
 {
 	[Export]
 	public NodePath DestinationPortalPath;
-	private BluePortal DestinationPortal;
-	private bool _canTeleport = true;
+	private BluePortal DestinationPortal; // To teleport to the other portal
+	private bool _canTeleport = true; // Property that avoid infinite teleportation
 
 	public OrangePortal()
 	{
-		Connect("body_entered", new Callable(this, nameof(OnBodyEntered)));
+		Connect("body_entered", new Callable(this, nameof(OnBodyEntered))); // Connect the OnBodyEntered Function
 	}
 
-	public override void _Ready()
+	public override void _Ready() // Load the "Open" variable and check if the DestinationportalPath is correct
 	{
 		string sceneName = GetTree().CurrentScene.Name;
 		if (sceneName == "Level2")
@@ -35,7 +36,7 @@ public partial class OrangePortal : Portal
 		}
 	}
 
-	public void BlockTeleportTemporarily()
+	public void BlockTeleportTemporarily() // Avoids infinite tp
 	{
 		_canTeleport = false;
 		var timer = new Timer();
@@ -50,7 +51,7 @@ public partial class OrangePortal : Portal
 		timer.Start();
 	}
 
-	public void OnBodyEntered(Node body)
+	public void OnBodyEntered(Node body) // Detect the player and TP the player
 	{
 		if (!_canTeleport)
 			return;
@@ -68,7 +69,7 @@ public partial class OrangePortal : Portal
 			float offset = 20f;
 			player.GlobalPosition = DestinationPortal.GlobalPosition + exitDir * offset;
 			player.ForceVelocityAfterTeleport(rotatedVelocity);
-			if (rotatedVelocity.Length() < 10f)
+			if (rotatedVelocity.Length() < 10f) //Gives a boost to the player when he'll get out the portal when the speed in almost null
 			{
 				rotatedVelocity = DestinationPortal.GlobalTransform.X * 200f;
 				rotatedVelocity = DestinationPortal.GlobalTransform.Y * 200f;
