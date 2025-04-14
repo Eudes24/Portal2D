@@ -14,3 +14,7 @@ https://grappe.itch.io
 
 The cursor design was made by Binary Six.
 http://www.rw-designer.com/user/55648
+
+#About the sounds
+The music was made by Stereophysics
+https://enriquecdl.itch.io

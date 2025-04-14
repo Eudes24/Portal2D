@@ -3,8 +3,6 @@ using System;
 
 public partial class PauseMenu : Control
 {
-
-	
 	public override void _Ready()
 	{
 	var resume = GetNode<Button>("PanelContainer/VBoxContainer/Resume");
@@ -37,7 +35,7 @@ public partial class PauseMenu : Control
 	private void ResumePressed()
 	{
 		TogglePause();
-		GD.Print("Game resume")
+		GD.Print("Game resume");
 	}
 
 	private void RestartPressed()

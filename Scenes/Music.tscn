@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bn7dslo1rmo13"]
+
+[ext_resource type="AudioStream" uid="uid://cbxw0w8an7yio" path="res://Objects_and_tiles/Sounds/AgresiveBass.ogg" id="1_uj100"]
+
+[node name="Music" type="AudioStreamPlayer2D"]
+stream = ExtResource("1_uj100")
+autoplay = true
+bus = &"Music"

@@ -1,0 +1,181 @@
+[gd_scene load_steps=8 format=3 uid="uid://bj6mnl5j26dmx"]
+
+[ext_resource type="Texture2D" uid="uid://cw1jd4fh3supx" path="res://Objects_and_tiles/BackgroundImage.png" id="1_nffmx"]
+[ext_resource type="Script" path="res://Scripts/MainMenu.cs" id="1_pi12m"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ew361"]
+texture = ExtResource("1_nffmx")
+modulate_color = Color(0.31802, 0.31802, 0.31802, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_woxig"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4fkyi"]
+bg_color = Color(0.633757, 0.633757, 0.633757, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_owurf"]
+bg_color = Color(0.377919, 0.377919, 0.377919, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_piyeg"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.5)
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pi12m")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -3.0
+offset_right = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ew361")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -168.0
+offset_top = -252.0
+offset_right = 169.0
+offset_bottom = -105.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 55
+text = "ℙ𝕠𝕣𝕥𝕒𝕝 𝟚𝔻"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -228.0
+offset_top = -63.0
+offset_right = 231.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="StartGame" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxEmpty_woxig")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4fkyi")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_owurf")
+theme_override_styles/normal = SubResource("StyleBoxFlat_piyeg")
+text = "Start game"
+
+[node name="Options" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxEmpty_woxig")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4fkyi")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_owurf")
+theme_override_styles/normal = SubResource("StyleBoxFlat_piyeg")
+text = "Options"
+
+[node name="OptionsMenu" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="OptionsMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -3.0
+offset_right = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ew361")
+
+[node name="Label" type="Label" parent="OptionsMenu"]
+layout_mode = 2
+offset_left = 442.0
+offset_top = 143.0
+offset_right = 722.0
+offset_bottom = 198.0
+theme_override_font_sizes/font_size = 40
+text = "Sound Volume"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="OptionsMenu"]
+layout_mode = 2
+offset_left = 271.0
+offset_top = 296.0
+offset_right = 861.0
+offset_bottom = 349.0
+
+[node name="Back" type="Button" parent="OptionsMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -112.0
+offset_top = 123.0
+offset_right = 120.0
+offset_bottom = 213.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxEmpty_woxig")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4fkyi")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_owurf")
+theme_override_styles/normal = SubResource("StyleBoxFlat_piyeg")
+text = "Back"

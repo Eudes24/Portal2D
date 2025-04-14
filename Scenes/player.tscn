@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://du03mmqttv68" path="res://Objects_and_tiles/AnimationSheet_Character.png" id="2_w5m1a"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pe2xs"]
-radius = 16.0
+radius = 14.0
 height = 62.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pnbt2"]

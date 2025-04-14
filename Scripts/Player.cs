@@ -4,7 +4,7 @@ using Godot;
 public partial class Player : CharacterBody2D
 {
 	public const float MaxSpeed = 250.0f;
-	public const float JumpVelocity = -400.0f;
+	public const float JumpVelocity = -450.0f;
 	public const float Acceleration = 1200.0f;
 	public const float Friction = 800.0f;
 
